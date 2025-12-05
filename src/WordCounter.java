@@ -10,40 +10,100 @@ import java.util.Scanner;
 public class WordCounter {
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        try (Scanner scanner = new Scanner(System.in)) {
+            runMenu(scanner);
+        }
+    }
+
+    private static void runMenu(Scanner scanner) {
+        boolean running = true;
+        while (running) {
+            printMenu();
+            System.out.print("Choose an option: ");
+            String choice = scanner.nextLine().trim();
+            System.out.println();
+
+            switch (choice) {
+                case "1":
+                    handleWordCount(scanner);
+                    break;
+                case "2":
+                    handleDetailedAnalysis(scanner);
+                    break;
+                case "3":
+                    handleFileWordCounter(scanner);
+                    break;
+                case "4":
+                    running = false;
+                    System.out.println("Goodbye!");
+                    break;
+                default:
+                    System.out.println("Invalid selection. Please try again.");
+            }
+
+            if (running) {
+                System.out.println();
+            }
+        }
+    }
+
+    private static void printMenu() {
+        System.out.println("Word Counter Menu");
+        System.out.println("1. Word Count");
+        System.out.println("2. Detailed Analysis");
+        System.out.println("3. File Word Counter");
+        System.out.println("4. Exit");
+    }
+
+    private static void handleWordCount(Scanner scanner) {
+        System.out.print("Enter a sentence: ");
+        String input = scanner.nextLine();
+        String trimmed = input.trim();
+
+        if (trimmed.isEmpty()) {
+            System.out.println("Number of words: 0");
+            System.out.println("Number of characters: 0");
+            return;
+        }
+
+        int wordCount = countWords(trimmed);
+        int characterCount = trimmed.length();
+
+        System.out.println("Number of words: " + wordCount);
+        System.out.println("Number of characters: " + characterCount);
+    }
+
+    private static void handleDetailedAnalysis(Scanner scanner) {
+        System.out.print("Enter text to analyze: ");
+        String input = scanner.nextLine();
+        printDetailedStatistics(input.trim());
+    }
+
+    private static void handleFileWordCounter(Scanner scanner) {
         System.out.print("Enter a text file path: ");
         String filePath = scanner.nextLine().trim();
 
-        String fileContents;
         try {
-            fileContents = readTextFromFile(filePath);
+            String fileContents = readTextFromFile(filePath);
+            printDetailedStatistics(fileContents.trim());
         } catch (IOException e) {
             System.out.println("Unable to read file: " + e.getMessage());
-            scanner.close();
+        }
+    }
+
+    private static void printDetailedStatistics(String text) {
+        if (text.isEmpty()) {
+            printEmptyDetailedStats();
             return;
         }
 
-        String trimmedSentence = fileContents.trim();
-
-        if (trimmedSentence.isEmpty()) {
-            System.out.println("Number of words: 0");
-            System.out.println("Number of characters: 0");
-            System.out.println("Number of vowels: 0");
-            System.out.println("Number of consonants: 0");
-            System.out.println("Number of sentences: 0");
-            System.out.println("Longest word: N/A");
-            System.out.println("Most frequent word: N/A (0 times)");
-            scanner.close();
-            return;
-        }
-
-        int wordCount = countWords(trimmedSentence);
-        int characterCount = trimmedSentence.length();
-        int vowelCount = countVowels(trimmedSentence);
-        int consonantCount = countConsonants(trimmedSentence);
-        int sentenceCount = countSentences(trimmedSentence);
-        String longestWord = findLongestWord(trimmedSentence);
-        WordFrequency mostFrequentWord = findMostFrequentWord(trimmedSentence);
+        int wordCount = countWords(text);
+        int characterCount = text.length();
+        int vowelCount = countVowels(text);
+        int consonantCount = countConsonants(text);
+        int sentenceCount = countSentences(text);
+        String longestWord = findLongestWord(text);
+        WordFrequency mostFrequentWord = findMostFrequentWord(text);
 
         System.out.println("Number of words: " + wordCount);
         System.out.println("Number of characters: " + characterCount);
@@ -54,7 +114,16 @@ public class WordCounter {
         String frequencyLabel = mostFrequentWord.count == 1 ? " time" : " times";
         System.out.println("Most frequent word: " + mostFrequentWord.word
                 + " (" + mostFrequentWord.count + frequencyLabel + ")");
-        scanner.close();
+    }
+
+    private static void printEmptyDetailedStats() {
+        System.out.println("Number of words: 0");
+        System.out.println("Number of characters: 0");
+        System.out.println("Number of vowels: 0");
+        System.out.println("Number of consonants: 0");
+        System.out.println("Number of sentences: 0");
+        System.out.println("Longest word: N/A");
+        System.out.println("Most frequent word: N/A (0 times)");
     }
 
     private static int countWords(String sentence) {
