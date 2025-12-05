@@ -1,9 +1,18 @@
 # Word Counter
 
-Stage 1 of the Java Word Counter project. The application reads a sentence
-from standard input, then prints how many words and characters it contains.
-Character counts include spaces between words (leading/trailing spaces are
-ignored).
+# Word Counter
+
+Stage 2 adds richer statistics to the Java Word Counter project. The
+application reads a sentence from standard input, then reports:
+
+- Number of words
+- Number of characters (spaces between words are included)
+- Number of vowels
+- Number of consonants (letters that are not vowels)
+- Number of sentences (`.`, `!`, or `?` delimiters; defaults to 1 when none)
+- Longest word (punctuation trimmed off the ends)
+
+These additions practice loops, conditionals, and general string manipulation.
 
 ## Getting Started
 
@@ -33,6 +42,10 @@ Output:
 ```
 Number of words: 4
 Number of characters: 23
+Number of vowels: 8
+Number of consonants: 12
+Number of sentences: 1
+Longest word: programming
 ```
 
-This stage practices `String` functions such as `split`, `trim`, and `length`.
+The project now covers `split`, `trim`, `length`, loops, and conditionals.
