@@ -1,7 +1,7 @@
 # Word Counter
 
-Stage 3 adds a most-frequent-word statistic to the Java Word Counter project.
-The application reads a sentence from standard input, then reports:
+Stage 4 turns the Java Word Counter project into a file-based tool. Provide a
+path to a text file and the application will read it before reporting:
 
 - Number of words
 - Number of characters (spaces between words are included)
@@ -11,8 +11,9 @@ The application reads a sentence from standard input, then reports:
 - Longest word (punctuation trimmed off the ends)
 - Most frequent word (case-insensitive; earliest word wins if there is a tie)
 
-These additions practice loops, conditionals, string manipulation, and
-`HashMap`-based counting logic.
+This stage layers file handling (via `Files.newBufferedReader`) and exception
+handling on top of the loops, conditionals, and string manipulation from the
+previous stages.
 
 ## Getting Started
 
@@ -29,7 +30,14 @@ javac src/WordCounter.java
 java -cp src WordCounter
 ```
 
+The program will prompt for the text file path and validate it before running
+any statistics. Invalid paths and unreadable files are reported with a clear
+error message.
+
 ### Example
+
+Create a file named `sample.txt` with the following contents, then run the
+program and provide the file path when prompted.
 
 Input:
 
@@ -40,6 +48,7 @@ java is good and java is powerful
 Output:
 
 ```
+Enter a text file path: sample.txt
 Number of words: 7
 Number of characters: 33
 Number of vowels: 12
@@ -49,5 +58,5 @@ Longest word: powerful
 Most frequent word: java (2 times)
 ```
 
-The project now covers `split`, `trim`, `length`, loops, conditionals, and
-`HashMap`-style counting.
+The project now covers `split`, `trim`, `length`, loops, conditionals,
+`HashMap`-style counting, file I/O with `BufferedReader`, and exception handling.

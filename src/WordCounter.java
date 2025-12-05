@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -6,9 +11,19 @@ public class WordCounter {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter a sentence: ");
-        String sentence = scanner.nextLine();
-        String trimmedSentence = sentence.trim();
+        System.out.print("Enter a text file path: ");
+        String filePath = scanner.nextLine().trim();
+
+        String fileContents;
+        try {
+            fileContents = readTextFromFile(filePath);
+        } catch (IOException e) {
+            System.out.println("Unable to read file: " + e.getMessage());
+            scanner.close();
+            return;
+        }
+
+        String trimmedSentence = fileContents.trim();
 
         if (trimmedSentence.isEmpty()) {
             System.out.println("Number of words: 0");
@@ -123,6 +138,32 @@ public class WordCounter {
 
     private static String cleanWord(String token) {
         return token.replaceAll("^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "");
+    }
+
+    private static String readTextFromFile(String filePath) throws IOException {
+        if (filePath.isEmpty()) {
+            throw new IOException("No file path provided.");
+        }
+
+        Path path = Paths.get(filePath);
+        if (!Files.exists(path)) {
+            throw new IOException("File not found: " + path);
+        }
+        if (!Files.isRegularFile(path)) {
+            throw new IOException("Path does not point to a file: " + path);
+        }
+
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (content.length() > 0) {
+                    content.append(System.lineSeparator());
+                }
+                content.append(line);
+            }
+        }
+        return content.toString();
     }
 
     private static class WordFrequency {
