@@ -1,9 +1,7 @@
 # Word Counter
 
-# Word Counter
-
-Stage 2 adds richer statistics to the Java Word Counter project. The
-application reads a sentence from standard input, then reports:
+Stage 3 adds a most-frequent-word statistic to the Java Word Counter project.
+The application reads a sentence from standard input, then reports:
 
 - Number of words
 - Number of characters (spaces between words are included)
@@ -11,8 +9,10 @@ application reads a sentence from standard input, then reports:
 - Number of consonants (letters that are not vowels)
 - Number of sentences (`.`, `!`, or `?` delimiters; defaults to 1 when none)
 - Longest word (punctuation trimmed off the ends)
+- Most frequent word (case-insensitive; earliest word wins if there is a tie)
 
-These additions practice loops, conditionals, and general string manipulation.
+These additions practice loops, conditionals, string manipulation, and
+`HashMap`-based counting logic.
 
 ## Getting Started
 
@@ -34,18 +34,20 @@ java -cp src WordCounter
 Input:
 
 ```
-I love Java programming
+java is good and java is powerful
 ```
 
 Output:
 
 ```
-Number of words: 4
-Number of characters: 23
-Number of vowels: 8
-Number of consonants: 12
+Number of words: 7
+Number of characters: 33
+Number of vowels: 12
+Number of consonants: 15
 Number of sentences: 1
-Longest word: programming
+Longest word: powerful
+Most frequent word: java (2 times)
 ```
 
-The project now covers `split`, `trim`, `length`, loops, and conditionals.
+The project now covers `split`, `trim`, `length`, loops, conditionals, and
+`HashMap`-style counting.

@@ -1,3 +1,5 @@
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class WordCounter {
@@ -15,6 +17,7 @@ public class WordCounter {
             System.out.println("Number of consonants: 0");
             System.out.println("Number of sentences: 0");
             System.out.println("Longest word: N/A");
+            System.out.println("Most frequent word: N/A (0 times)");
             scanner.close();
             return;
         }
@@ -25,6 +28,7 @@ public class WordCounter {
         int consonantCount = countConsonants(trimmedSentence);
         int sentenceCount = countSentences(trimmedSentence);
         String longestWord = findLongestWord(trimmedSentence);
+        WordFrequency mostFrequentWord = findMostFrequentWord(trimmedSentence);
 
         System.out.println("Number of words: " + wordCount);
         System.out.println("Number of characters: " + characterCount);
@@ -32,6 +36,9 @@ public class WordCounter {
         System.out.println("Number of consonants: " + consonantCount);
         System.out.println("Number of sentences: " + sentenceCount);
         System.out.println("Longest word: " + longestWord);
+        String frequencyLabel = mostFrequentWord.count == 1 ? " time" : " times";
+        System.out.println("Most frequent word: " + mostFrequentWord.word
+                + " (" + mostFrequentWord.count + frequencyLabel + ")");
         scanner.close();
     }
 
@@ -78,7 +85,7 @@ public class WordCounter {
     private static String findLongestWord(String sentence) {
         String longest = "";
         for (String token : sentence.split("\\s+")) {
-            String word = token.replaceAll("^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "");
+            String word = cleanWord(token);
             if (word.isEmpty()) {
                 continue;
             }
@@ -87,6 +94,49 @@ public class WordCounter {
             }
         }
         return longest.isEmpty() ? "N/A" : longest;
+    }
+
+    private static WordFrequency findMostFrequentWord(String sentence) {
+        Map<String, WordFrequency> frequencyMap = new LinkedHashMap<>();
+        for (String token : sentence.split("\\s+")) {
+            String cleaned = cleanWord(token);
+            if (cleaned.isEmpty()) {
+                continue;
+            }
+            String normalized = cleaned.toLowerCase();
+            WordFrequency frequency = frequencyMap.get(normalized);
+            if (frequency == null) {
+                frequencyMap.put(normalized, new WordFrequency(cleaned, 1));
+            } else {
+                frequency.increment();
+            }
+        }
+
+        WordFrequency result = new WordFrequency("N/A", 0);
+        for (WordFrequency frequency : frequencyMap.values()) {
+            if (frequency.count > result.count) {
+                result = frequency;
+            }
+        }
+        return result;
+    }
+
+    private static String cleanWord(String token) {
+        return token.replaceAll("^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "");
+    }
+
+    private static class WordFrequency {
+        private final String word;
+        private int count;
+
+        private WordFrequency(String word, int count) {
+            this.word = word;
+            this.count = count;
+        }
+
+        private void increment() {
+            this.count++;
+        }
     }
 }
 
